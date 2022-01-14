@@ -168,6 +168,14 @@ function mediafire {
 
    file_down $file_url "$file_name"
 }
+function uptobox {
+   file_url=$(curl --location --request POST $1 | grep 'big-button-green-flat' | awk -F'"' '{print $2}')
+   echo $file_url
+   file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{print $NF}')")
+   echo $file_name
+
+   file_down $file_url "$file_name"
+}
 function switch {
    if [[ "$1" == *"mega"* ]];then
       mega "$1"
@@ -175,6 +183,8 @@ function switch {
       zippyshare "$1"
    elif [[ "$1" == *"mediafire"* ]];then
       mediafire "$1"
+   elif [[ "$1" == *"uptobox"* ]];then
+      uptobox "$1"
    else
       showhelp;exit 1
    fi
