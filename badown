@@ -187,16 +187,17 @@ function uptobox {
       file_token=$(cat .get.tmp | grep 'waitingToken' | awk -F"'"  '{print $4}')
       echo "VALUE token=$file_token"
       file_time_await=$(cat .get.tmp | grep 'time-remaining' | awk -F"'"  '{print $4}')
-      file_time_minutes=$(( file_time_await / 60 ))
+      #file_time_minutes=$(( file_time_await / 60 ))
 
       while [[ "$file_token" == "" ]]; do
          echo "entro al while"
-         echo "tiempo de espera : $file_time_minutes minuto(s)"
+         echo "tiempo de espera : $file_time_await segundos(s)"
+         rm -r .get.tmp
          sleep 120
          curl $1 -o .get.tmp
          file_token=$(cat .get.tmp | grep 'waitingToken')
       done
-      
+
       echo "salio del while"
       file_url=$(curl --location --request POST  $1 | grep 'big-button-green-flat' | awk -F'"' '{print $2}')
       echo $file_url
