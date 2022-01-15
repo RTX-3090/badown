@@ -171,7 +171,7 @@ function mediafire {
 function uptobox {
    curl $1 -o .get.tmp
    file_token=$(cat .get.tmp | grep 'waitingToken')
-   echo "token=$file_token"
+   echo "TAG token=$file_token"
 
    if [[ "$file_token" == "" ]];then
       echo "no existe tag token"
@@ -184,9 +184,11 @@ function uptobox {
    else
       echo "existe tag de token"
       #wait for time block download
+      file_token=$(cat .get.tmp | grep 'waitingToken' | awk -F"'"  '{print $4}')
+      echo "VALUE token=$file_token"
       file_time_await=$(cat .get.tmp | grep 'time-remaining' | awk -F"'"  '{print $4}')
       file_time_minutes=$(( file_time_await / 60 ))
-      
+
       while [[ "$file_token" == "" ]]; do
          echo "tiempo de espera : $file_time_minutes minuto(s)"
          sleep 120
