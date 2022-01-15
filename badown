@@ -176,6 +176,26 @@ function uptobox {
 
    file_down $file_url "$file_name"
 }
+function 1fichier {
+   curl -c .cookie.tmp $1 -O .get.tmp
+   file_name=$(cat .get.tmp | grep -n 'class="normal"' | head -n 1 | awk -F'>' '{print $2}' | awk -F'<' '{print $1}')
+   echo $file_name   
+
+   curl -b .cookie.tmp --location --request POST $1 --header "referer: $1" -o .post.tmp
+   file_await=$(cat .post.tmp | grep 'You must wait' | awk -F'm' '{print $2}' | awk -F' ' '{print $3}')
+
+   while ! [[ "$file_await" == "" ]]; do
+      echo "tiempo de espera : $file_await minutos"
+      sleep 120
+      curl -b .cookie.tmp --location --request POST $1 --header "referer: $1" -o .post.tmp
+      file_await=$(cat .post.tmp | grep 'You must wait' | awk -F'm' '{print $2}' | awk -F' ' '{print $3}')
+   done
+
+   file_url=$(cat .post.tmp | grep 'ok btn-general btn-orange' | awk -F'"' '{print $2}')
+   echo $file_url
+
+   file_down $file_url "$file_name"
+}
 function switch {
    if [[ "$1" == *"mega"* ]];then
       mega "$1"
@@ -185,6 +205,8 @@ function switch {
       mediafire "$1"
    elif [[ "$1" == *"uptobox"* ]];then
       uptobox "$1"
+   elif [[ "$1" == *"1fichier"* ]];then
+      1fichier "$1"
    else
       showhelp;exit 1
    fi
