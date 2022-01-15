@@ -169,12 +169,35 @@ function mediafire {
    file_down $file_url "$file_name"
 }
 function uptobox {
-   file_url=$(curl --location --request POST $1 | grep 'big-button-green-flat' | awk -F'"' '{print $2}')
-   echo $file_url
-   file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{print $NF}')")
-   echo $file_name
+   curl -c .cookie.tmp $1 -o .get.tmp
+   file_token=$(cat .get.tmp | grep 'waitingToken')
 
-   file_down $file_url "$file_name"
+   if [[ "$file_token" == "" ]];then
+      #file allow for download
+      file_url=$(curl --location --request POST  $1 | grep 'big-button-green-flat' | awk -F'"' '{print $2}')
+      echo $file_url
+      file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{print $NF}')")
+      echo $file_name
+      file_down $file_url "$file_name"
+   else
+      #wait for time block download
+      file_time_await=$(cat .get.tmp | grep 'time-remaining' | awk -F"'"  '{print $4}')
+      file_time_minutes=$(( file_time_await / 60 ))
+
+      while [[ "$file_token" == "" ]]; do
+         echo "tiempo de espera : $file_time_minutes minuto(s)"
+         sleep 120
+         curl $1 -o .get.tmp
+         file_token=$(cat .get.tmp | grep 'waitingToken')
+      done
+
+      file_url=$(curl --location --request POST  $1 | grep 'big-button-green-flat' | awk -F'"' '{print $2}')
+      echo $file_url
+      file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{print $NF}')")
+      echo $file_name
+      file_down $file_url "$file_name"
+   fi
+
 }
 function 1fichier {
    curl -c .cookie.tmp $1 -o .get.tmp
