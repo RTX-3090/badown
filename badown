@@ -169,7 +169,7 @@ function mediafire {
    file_down $file_url "$file_name"
 }
 function uptobox {
-   curl $1 -o .get.tmp
+   curl -c .cookie.tmp $1 -o .get.tmp
    file_token=$(cat .get.tmp | grep 'waitingToken')
    echo "TAG token=$file_token"
 
@@ -194,12 +194,12 @@ function uptobox {
          echo "tiempo de espera : $file_time_await segundos(s)"
          rm -r .get.tmp
          sleep 120
-         curl $1 -o .get.tmp
+         curl -c .cookie.tmp $1 -o .get.tmp
          file_token=$(cat .get.tmp | grep 'waitingToken')
       done
 
       echo "salio del while"
-      file_url=$(curl --location --request POST $1 --form waitingToken="$file_token" | grep 'big-button-green-flat' | awk -F'"' '{print $2}')
+      file_url=$(curl -b .cookie.tmp --location --request POST $1 --header "referer: $1" --form waitingToken="$file_token" | grep 'big-button-green-flat' | awk -F'"' '{print $2}')
       echo $file_url
       file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{print $NF}')")
       echo $file_name
