@@ -177,9 +177,9 @@ function uptobox {
    file_down $file_url "$file_name"
 }
 function 1fichier {
-   curl -c .cookie.tmp $1 -O .get.tmp
+   curl -c .cookie.tmp $1 -o .get.tmp
    file_name=$(cat .get.tmp | grep -n 'class="normal"' | head -n 1 | awk -F'>' '{print $2}' | awk -F'<' '{print $1}')
-   echo $file_name   
+   echo $file_name
 
    curl -b .cookie.tmp --location --request POST $1 --header "referer: $1" -o .post.tmp
    file_await=$(cat .post.tmp | grep 'You must wait' | awk -F'm' '{print $2}' | awk -F' ' '{print $3}')
