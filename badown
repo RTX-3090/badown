@@ -281,7 +281,7 @@ function switch {
 }
 function showhelp {
    echo -e "badown 0.4"
-   echo -e "bash downloader for hostsites like mega, mediafire and zippyshare."
+   echo -e "bash downloader for hostsites like mega, uptobox, 1fichier, mediafire and zippyshare."
    echo -e "badown [OPTION] ['URL']"
    echo -e "\tOptions:"
    echo -e "\t-s,\t--speed SPEED         Download speed limit (integer values: 500B, 70K, 2M)."
