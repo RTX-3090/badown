@@ -231,7 +231,8 @@ function uptobox {
          file_time_await=$(echo "$gethtml" | grep 'time-remaining' | awk -F"'"  '{print $4}')
          log "time await: '$file_time_await'"
          if ! [[ "$file_time_await" == "" ]];then
-            sleep $file_time_await
+            # sleep $file_time_await
+            sleep 60
          fi         
          file_response=$(curl -s -b get.cookie --location --request POST $1 --data-raw "waitingToken=$file_token")
          #echo $file_response

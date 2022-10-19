@@ -171,6 +171,11 @@ dist
 *.debug
 *.tmp
 output/*
+*.rar
+*.mkv
+*.mp4
+*.avi
+*.url
 # Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode,batch
